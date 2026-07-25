@@ -1,0 +1,23 @@
+Business Requirement Document
+Project: Vendor Mobility & Capital Compliance Management System
+
+1. Overview
+The organization engages multiple vendors across trade categories — electrical, survey, earthwork, carpentry, documentation, hardware installation, internet service, power supply, and others — to execute work at various railway project sites, including Delhi, Lucknow, Jhansi, Katra, and Moradabad. Each vendor is assigned an estimated daily cost for accommodation and local conveyance & food, based on an approved plan of action, which also defines the expected number of work days. The system must track each vendor's actual expenses and actual work duration against these estimates, so the company can identify vendors who are optimal in both cost efficiency and completion time, and flag or eliminate those who consistently overrun either.
+
+2. Business Requirements
+
+BR-1: The system shall allow the company to onboard a vendor with details including vendor name, work category (electrical, survey, earthwork, carpentry, documentation, hardware installation, internet service, power supply, or other), and assigned site (Delhi, Lucknow, Jhansi, Katra, or Moradabad).
+
+BR-2: The system shall allow the company to define a plan of action for each vendor assignment, including the estimated number of work days and the estimated per-day cost for accommodation and local conveyance & food.
+
+BR-3: The system shall allow a vendor to submit their actual daily expenses for accommodation and local conveyance & food, along with the actual number of days taken to complete the assigned work.
+
+BR-4: The system shall automatically calculate the variance between estimated and actual expenses, and between the planned and actual completion time, for each vendor assignment.
+
+BR-5: The system shall classify each vendor assignment with a flag status — Green (completed within or close to both the estimated cost and estimated time), At Risk (moderate deviation in either cost or time), or Red (significant deviation in cost, time, or both) — based on defined variance thresholds.
+
+BR-6: The system shall provide a dashboard showing all vendor assignments, filterable by site, work category, and flag status, to help the company identify optimal vendors and eliminate consistently underperforming ones.
+
+BR-7: The system shall maintain a historical record of each vendor's flag outcomes across all past assignments, so the company can evaluate a vendor's overall reliability before awarding future work.
+
+BR-8: The system shall allow authorized users to export vendor performance data for a given site or quarter as a CSV file for management review.

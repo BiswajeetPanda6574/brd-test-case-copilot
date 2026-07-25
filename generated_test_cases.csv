@@ -1,0 +1,30 @@
+Test Case ID,Requirement ID,Title,Preconditions,Steps,Expected Result
+TC-01,REQ-01,Successfully Onboard New Vendor with Valid Details,The user is logged into the system with administrative privileges and has access to the Vendor Management module.,"1. Navigate to the Vendor Management section and click on the 'Onboard New Vendor' button.
+2. Enter valid vendor details into the respective fields: Vendor Name ('Acme Supplies'), Work Category ('Electrical'), and Assigned Site ('Site A').
+3. Click the 'Save' or 'Submit' button to complete the onboarding process.","The system successfully saves the vendor details, displays a confirmation message indicating the vendor has been onboarded, and the new vendor appears in the vendor list with the correct Name, Work Category, and Assigned Site."
+TC-02,REQ-02,Successfully define a plan of action with estimated work days and per-day costs for a vendor assignment,The user is logged in as a company admin and a vendor assignment has been successfully created in the system.,"1. Navigate to the vendor assignments management section and select an active assignment.
+2. Click on the 'Define Plan of Action' button.
+3. Enter a valid numeric value for estimated work days (e.g., 10).
+4. Enter a valid numeric value for estimated per-day costs (e.g., 150.00).
+5. Click the 'Save Plan of Action' button.","The plan of action is successfully saved and associated with the vendor assignment, displaying the correct estimated work days and per-day costs in the assignment details view."
+TC-03,REQ-03,Verify vendor can successfully submit actual daily expenses and actual duration,"The vendor is logged into the system, has an assigned work order, and is on the expense and duration submission page.","1. Enter valid numeric values for actual daily expenses
+2. Enter a valid positive integer for the actual number of days taken
+3. Click the 'Submit' button","The system successfully saves the submitted expenses and duration data, displays a confirmation message, and updates the work status to 'Submitted'."
+TC-04,REQ-04,Verify automatic calculation of expense and time variance for an assignment,"The user is logged in, and an assignment exists with populated estimated expenses, actual expenses, planned completion time, and actual completion time.","1. Navigate to the assignment details page.
+2. View the financial section to check the calculated variance between estimated and actual expenses.
+3. View the schedule section to check the calculated variance between planned and actual completion time.",The system accurately displays the expense variance (Actual Expenses minus Estimated Expenses) and the time variance (Actual Completion Time minus Planned Completion Time) for the assignment without requiring manual intervention.
+TC-05,REQ-05,Verify vendor assignment is flagged as Red when cost and time variances exceed the Red threshold,"User is logged in with appropriate permissions, a vendor assignment exists in the system, and variance thresholds are configured such that cost variance > 20% and time variance > 15% results in a 'Red' status.","1. Navigate to the vendor assignments management page.
+2. Select an active vendor assignment and update its actual cost and completion time to exceed the Red threshold values.
+3. Save the assignment updates and observe the assignment flag status.",The system successfully calculates the variances and updates the vendor assignment flag status to 'Red'.
+TC-06,REQ-06,"Verify dashboard filtering by site, work category, and flag status","User is logged in with permissions to view the vendor assignments dashboard, and multiple vendor assignments exist with varying sites, work categories, and flag statuses.","1. Navigate to the vendor assignments dashboard
+2. Select a specific site from the site filter dropdown
+3. Select a specific work category from the work category filter dropdown
+4. Select a specific flag status from the flag status filter dropdown
+5. Verify the displayed vendor assignments list","The dashboard updates to display only the vendor assignments that match all the selected criteria for site, work category, and flag status."
+TC-07,REQ-07,Verify historical record is maintained for vendor flag outcomes across past assignments,A vendor account exists in the system with multiple completed past assignments that include recorded flag outcomes.,"1. Navigate to the vendor management and evaluation dashboard.
+2. Select the target vendor to view their profile and performance history.
+3. Review the historical performance section to verify that all past assignments and their corresponding flag outcomes are accurately listed in chronological order.","The system displays a complete and accurate historical record of all flag outcomes associated with the vendor's past assignments, reflecting their overall reliability correctly."
+TC-08,REQ-08,Verify authorized user can export vendor performance data as a CSV file,The user is logged in with authorized management credentials and vendor performance data exists for the selected site and quarter.,"1. Navigate to the Vendor Performance dashboard.
+2. Select a specific site and quarter from the filter options.
+3. Click on the 'Export Data' button and select 'CSV' format.
+4. Verify that the file download initiates and completes successfully.",A CSV file containing the correct vendor performance data for the specified site and quarter is successfully downloaded and formatted properly for management review.

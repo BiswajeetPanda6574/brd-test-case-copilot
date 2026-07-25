@@ -49,3 +49,11 @@ brd-test-case-copilot/
 - Push generated test cases directly into a Google Sheet instead of CSV export
 - Deploy via a managed cloud AI service (e.g., Azure OpenAI or AWS Bedrock) to demonstrate cross-cloud deployment
 - Add a human-in-the-loop review/edit step before finalizing test cases
+
+
+## Future Improvements
+- Batch all requirements into a single generation call to reduce API usage and runtime
+- Add negative and edge-case test cases alongside the primary happy-path case
+- Support non-functional requirements, business rules, and user roles as distinct BRD sections
+- Export to Excel/Jira-compatible formats in addition to CSV
+- Add a lightweight dashboard for reviewing and editing generated test cases before export

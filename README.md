@@ -1,3 +1,5 @@
+**Live demo:** [https://brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app/].streamlit.app
+
 # BRD → Test Case Copilot
 
 An AI-powered copilot that reads a Business Requirement Document (BRD) and automatically generates structured test cases for each requirement — turning a manual QA prep task into a few minutes of automated work.

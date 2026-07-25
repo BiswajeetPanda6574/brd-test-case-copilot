@@ -11,6 +11,7 @@ import os
 
 import streamlit as st
 from google import genai
+from google.genai import types
 
 from extractor import read_brd, extract_requirements, generate_test_cases, to_dataframe
 
@@ -35,7 +36,7 @@ model_choice = st.selectbox(
 uploaded_file = st.file_uploader("Upload BRD", type=["docx", "pdf", "txt"])
 
 if uploaded_file and st.button("Generate Test Cases", type="primary", disabled=not api_key):
-    client = genai.Client(api_key=api_key)
+    client = genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=30000))
 
     with st.spinner("Reading document..."):
         brd_text = read_brd(file_bytes=uploaded_file.read(), filename=uploaded_file.name)
@@ -50,6 +51,23 @@ if uploaded_file and st.button("Generate Test Cases", type="primary", disabled=n
     with st.expander("Requirements"):
         for r in requirements:
             st.markdown(f"**{r['id']} — {r['title']}**  \n{r['description']}")
+
+    requirement_count = len(requirements)
+    total_calls = requirement_count + 1  # +1 for the extraction call already made
+    estimated_minutes = (requirement_count * 15) / 60  # ~15s per paced call, rough estimate
+
+    st.info(
+        f"Generating test cases will make {requirement_count} more API call(s) "
+        f"(≈{total_calls} total for this run) and take roughly {estimated_minutes:.1f} minute(s), "
+        f"since calls are paced to respect the free tier's rate limit."
+    )
+    if requirement_count > 15:
+        st.warning(
+            f"This BRD has {requirement_count} requirements, which is a lot for the free tier "
+            "(typically ~20 requests/day per model). This run alone may use most or all of today's "
+            "quota for the selected model. Consider testing with a smaller BRD first, or switch models "
+            "in the dropdown above if this one runs out partway through."
+        )
 
     progress_bar = st.progress(0, text="Generating test cases...")
 

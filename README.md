@@ -1,5 +1,3 @@
-**Live demo:** [brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app](https://brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app/)
-
 Live demo: brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app
 
 BRD → Test Case Copilot

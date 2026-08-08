@@ -54,8 +54,8 @@ if uploaded_file and st.button("Generate Test Cases", type="primary", disabled=n
 
     requirement_count = len(requirements)
     st.info(
-        f"Generating test cases for all {requirement_count} requirements in a single API call "
-        f"(2 calls total for this run, vs. {requirement_count + 1} in the earlier per-requirement version)."
+        f"Generating a Positive and a Negative test case for each of the {requirement_count} requirements "
+        f"({requirement_count * 2} test cases total) in a single API call."
     )
     if requirement_count > 30:
         st.warning(

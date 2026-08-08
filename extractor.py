@@ -112,15 +112,19 @@ def extract_requirements(brd_text: str, client, model: str = "gemini-flash-lates
 # 3. Generating test cases
 # ---------------------------------------------------------------------------
 
-BATCH_TEST_CASE_PROMPT = """You are a QA engineer. Write one detailed test case for each requirement listed below.
+BATCH_TEST_CASE_PROMPT = """You are a QA engineer. For each requirement listed below, write TWO test cases:
+1. A "Positive" test case covering the expected, happy-path behavior when the requirement is met correctly
+2. A "Negative" test case covering an invalid input, missing precondition, permission issue, or edge case
+   that the system should handle correctly (e.g. reject, error message, fallback behavior)
 
 Requirements (JSON array):
 {requirements_json}
 
-Return ONLY a JSON array, no other text, no markdown fences. Return exactly one test case per requirement,
-in the same order as the requirements above, each shaped exactly like this:
+Return ONLY a JSON array, no other text, no markdown fences. Return exactly two test cases per requirement
+(one Positive, one Negative), each shaped exactly like this:
 {{
   "requirement_id": "<the matching requirement's id>",
+  "test_type": "Positive" or "Negative",
   "title": "short test case title",
   "preconditions": "state required before the test",
   "steps": ["step 1", "step 2", "step 3"],
@@ -130,11 +134,9 @@ in the same order as the requirements above, each shaped exactly like this:
 
 def generate_test_cases(requirements: List[dict], client, model: str = "gemini-flash-latest", progress_callback=None) -> List[dict]:
     """
-    Generates test cases for ALL requirements in a single batched API call, instead of
-    one call per requirement. This cuts a run from N+1 API calls down to just 2 total
-    (1 to extract requirements, 1 to generate every test case), which avoids the
-    free tier's per-minute and per-day rate limits for typical BRD sizes and finishes
-    in seconds instead of minutes.
+    Generates a Positive and a Negative test case for each requirement, all in a single
+    batched API call (still just 2 API calls total per run: 1 to extract requirements,
+    1 to generate every test case, regardless of requirement count).
     progress_callback, if given, is called once as progress_callback(1, 1) since the
     whole batch completes in one step (kept for interface compatibility with callers).
     """
@@ -161,6 +163,7 @@ def to_dataframe(test_cases: List[dict]):
         rows.append({
             "Test Case ID": tc.get("test_case_id", ""),
             "Requirement ID": tc.get("requirement_id", ""),
+            "Test Type": tc.get("test_type", ""),
             "Title": tc.get("title", ""),
             "Preconditions": tc.get("preconditions", ""),
             "Steps": "\n".join(f"{i + 1}. {s}" for i, s in enumerate(tc.get("steps", []))),

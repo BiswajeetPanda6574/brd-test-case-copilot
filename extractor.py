@@ -112,16 +112,15 @@ def extract_requirements(brd_text: str, client, model: str = "gemini-flash-lates
 # 3. Generating test cases
 # ---------------------------------------------------------------------------
 
-TEST_CASE_PROMPT = """You are a QA engineer. Write one detailed test case for the requirement below.
+BATCH_TEST_CASE_PROMPT = """You are a QA engineer. Write one detailed test case for each requirement listed below.
 
-Requirement ID: {req_id}
-Requirement title: {title}
-Requirement description: {description}
+Requirements (JSON array):
+{requirements_json}
 
-Return ONLY a JSON object, no other text, no markdown fences, in this shape:
+Return ONLY a JSON array, no other text, no markdown fences. Return exactly one test case per requirement,
+in the same order as the requirements above, each shaped exactly like this:
 {{
-  "test_case_id": "TC-01",
-  "requirement_id": "{req_id}",
+  "requirement_id": "<the matching requirement's id>",
   "title": "short test case title",
   "preconditions": "state required before the test",
   "steps": ["step 1", "step 2", "step 3"],
@@ -129,34 +128,23 @@ Return ONLY a JSON object, no other text, no markdown fences, in this shape:
 }}"""
 
 
-def generate_test_case(requirement: dict, client, index: int, model: str = "gemini-flash-latest") -> dict:
-    """Calls the LLM to generate one structured test case for one requirement."""
-    prompt = TEST_CASE_PROMPT.format(
-        req_id=requirement["id"],
-        title=requirement["title"],
-        description=requirement["description"],
-    )
-    raw = _call_with_retry(client, model, prompt)
-    test_case = _parse_json_block(raw)
-    test_case["test_case_id"] = f"TC-{index:02d}"
-    return test_case
-
-
 def generate_test_cases(requirements: List[dict], client, model: str = "gemini-flash-latest", progress_callback=None) -> List[dict]:
     """
-    Generates one test case per requirement, in order.
-    Pauses between calls to stay under the free tier's 5-requests-per-minute limit.
-    If progress_callback is given, it's called as progress_callback(current, total) after each requirement.
+    Generates test cases for ALL requirements in a single batched API call, instead of
+    one call per requirement. This cuts a run from N+1 API calls down to just 2 total
+    (1 to extract requirements, 1 to generate every test case), which avoids the
+    free tier's per-minute and per-day rate limits for typical BRD sizes and finishes
+    in seconds instead of minutes.
+    progress_callback, if given, is called once as progress_callback(1, 1) since the
+    whole batch completes in one step (kept for interface compatibility with callers).
     """
-    test_cases = []
-    total = len(requirements)
-    for i, req in enumerate(requirements, start=1):
-        tc = generate_test_case(req, client, i, model=model)
-        test_cases.append(tc)
-        if progress_callback:
-            progress_callback(i, total)
-        if i < total:
-            time.sleep(13)  # free tier allows 5 requests/minute; this keeps every call under that
+    requirements_json = json.dumps(requirements, indent=2)
+    raw = _call_with_retry(client, model, BATCH_TEST_CASE_PROMPT.format(requirements_json=requirements_json))
+    test_cases = _parse_json_block(raw)
+    for i, tc in enumerate(test_cases, start=1):
+        tc["test_case_id"] = f"TC-{i:02d}"
+    if progress_callback:
+        progress_callback(1, 1)
     return test_cases
 
 

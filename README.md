@@ -1,8 +1,8 @@
-**Live demo:** [https://brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app/].streamlit.app
+**Live demo:** [brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app](https://brd-test-case-copilot-jchfsugzf9nghpbxd8xz7d.streamlit.app/)
 
 # BRD → Test Case Copilot
 
-An AI-powered copilot that reads a Business Requirement Document (BRD) and automatically generates structured test cases for each requirement — turning a manual QA prep task into a few minutes of automated work.
+An AI-powered copilot that reads a Business Requirement Document (BRD) and automatically generates structured test cases for every requirement in seconds — turning a manual QA prep task into a near-instant automated one.
 
 ## Why this project
 
@@ -12,7 +12,7 @@ This mirrors a real AI Engineering use case: building AI-driven business copilot
 
 1. **Read** — parses a `.docx`, `.pdf`, or `.txt` BRD into plain text
 2. **Extract** — prompts an LLM to pull out each distinct requirement as structured JSON (id, title, description)
-3. **Generate** — for each requirement, prompts the LLM to produce a full test case: preconditions, numbered steps, and expected result
+3. **Generate** — sends all extracted requirements in a single batched prompt, and the LLM returns a full test case for each one (preconditions, numbered steps, expected result) in one response
 4. **Deliver** — displays results in a table in the app and lets the user download them as CSV
 
 ## Tech stack
@@ -49,3 +49,10 @@ brd-test-case-copilot/
 - Push generated test cases directly into a Google Sheet instead of CSV export
 - Deploy via a managed cloud AI service (e.g., Azure OpenAI or AWS Bedrock) to demonstrate cross-cloud deployment
 - Add a human-in-the-loop review/edit step before finalizing test cases
+
+
+## Future Improvements
+- Add negative and edge-case test cases alongside the primary happy-path case
+- Support non-functional requirements, business rules, and user roles as distinct BRD sections
+- Export to Excel/Jira-compatible formats in addition to CSV
+- Add a lightweight dashboard for reviewing and editing generated test cases before export

@@ -53,32 +53,18 @@ if uploaded_file and st.button("Generate Test Cases", type="primary", disabled=n
             st.markdown(f"**{r['id']} — {r['title']}**  \n{r['description']}")
 
     requirement_count = len(requirements)
-    total_calls = requirement_count + 1  # +1 for the extraction call already made
-    estimated_minutes = (requirement_count * 15) / 60  # ~15s per paced call, rough estimate
-
     st.info(
-        f"Generating test cases will make {requirement_count} more API call(s) "
-        f"(≈{total_calls} total for this run) and take roughly {estimated_minutes:.1f} minute(s), "
-        f"since calls are paced to respect the free tier's rate limit."
+        f"Generating test cases for all {requirement_count} requirements in a single API call "
+        f"(2 calls total for this run, vs. {requirement_count + 1} in the earlier per-requirement version)."
     )
-    if requirement_count > 15:
+    if requirement_count > 30:
         st.warning(
-            f"This BRD has {requirement_count} requirements, which is a lot for the free tier "
-            "(typically ~20 requests/day per model). This run alone may use most or all of today's "
-            "quota for the selected model. Consider testing with a smaller BRD first, or switch models "
-            "in the dropdown above if this one runs out partway through."
+            f"This BRD has {requirement_count} requirements. Very large batches can occasionally get cut off "
+            "in a single response — if the output below looks incomplete, try a smaller BRD or split it into sections."
         )
 
-    progress_bar = st.progress(0, text="Generating test cases...")
-
-    def _update_progress(current, total):
-        progress_bar.progress(
-            current / total,
-            text=f"Generating test case {current} of {total} (paced to respect free-tier rate limits)...",
-        )
-
-    test_cases = generate_test_cases(requirements, client, model=model_choice, progress_callback=_update_progress)
-    progress_bar.empty()
+    with st.spinner("Generating test cases..."):
+        test_cases = generate_test_cases(requirements, client, model=model_choice)
 
     df = to_dataframe(test_cases)
     st.subheader("Generated Test Cases")
